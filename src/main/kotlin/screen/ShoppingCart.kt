@@ -5,9 +5,10 @@ import data.CartItems
 /*
     장바구니의 아이템 목록 display
  */
-class ShoppingCart {
+class ShoppingCart : Screen() {
     private val products = CartItems.products
     fun showCartItems() {
+        ScreenStack.push(this)
         if (products.isNotEmpty()) {
             println(
                 products.keys.joinToString(

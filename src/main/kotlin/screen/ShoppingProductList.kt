@@ -7,7 +7,7 @@ import extensions.*
     Category별 상품 목록을 관리하고
     사용자가 요청한 Category의 상품목록을 표시하도록 구현
  */
-class ShoppingProductList {
+class ShoppingProductList: Screen() {
     private val products = arrayOf(
         Product("패션","겨울 패딩"),
         Product("패션","겨울 바지"),
@@ -23,6 +23,7 @@ class ShoppingProductList {
         product.categoryLabel
     }
     fun showProducts(selectedCategory: String) {
+        ScreenStack.push(this)
         val categoryProducts = categories[selectedCategory]
         if (!categoryProducts.isNullOrEmpty()){
             println("""
