@@ -1,6 +1,6 @@
 package screen
 
-import data.Product
+import data.*
 /*
     Category별 상품 목록을 관리하고
     사용자가 요청한 Category의 상품목록을 표시하도록 구현
@@ -20,7 +20,6 @@ class ShoppingProductList {
     private val categories: Map<String, List<Product>> = products.groupBy { product ->
         product.categoryLabel
     }
-
     fun showProducts(selectedCategory: String) {
         val categoryProducts = categories[selectedCategory]
         if (!categoryProducts.isNullOrEmpty()){
@@ -28,12 +27,37 @@ class ShoppingProductList {
                 ***==================================***
                 선택하신 [$selectedCategory] 카테고리 상품입니다.
                 """.trimIndent())
-            val productSize = categoryProducts.size
-            for(index in 0 until productSize) {
-                println("${index}. ${categoryProducts[index].name}")
+
+            categoryProducts.forEachIndexed { index, product ->
+                println("${index}. ${product.name}")
             }
+            showCartOption(categoryProducts, selectedCategory)
         } else {
             showEmptyProductMessage(selectedCategory)
+        }
+    }
+
+    private fun showCartOption(categoryProducts: List<Product>, selectedCategory: String ) { // 장바구니에 담을 상품을 선택
+        println(
+            """
+                ***==========================***
+                장바구니에 담을 상품 번호를 선택해주세요.
+            """.trimIndent()
+        )
+
+        val selectedIndex = readLine()?.toIntOrNull()!! // 받은 문자열을 Int로 변환 | 변환 못할 시 Null로 반환 | non null assertion을 사용해 null이 아님을 컴파일에게 알림 ( 개선 필요)
+        categoryProducts.getOrNull(selectedIndex)?.let { product ->
+            CartItems.addProduct(product)
+            println("=> 장바구니로 이동하시려면 #을, 계속 소핑하시려면 *을 입력해주세요.")
+            val answer = readLine()
+            if (answer == "#"){
+                val shoppingCart = ShoppingCart()
+                shoppingCart.showCartItems()
+            } else if ( answer == "*") {
+                showProducts(selectedCategory)
+            } else {
+                // TODO 그 외 값 입력
+            }
         }
     }
 
