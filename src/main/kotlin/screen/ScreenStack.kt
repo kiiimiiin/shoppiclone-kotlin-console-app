@@ -11,7 +11,7 @@ object ScreenStack { // 싱글톤 객체, 화면 전역에서 쓰임
         screenStack.removeLastOrNull()
     }
 
-    fun peak(): Screen? {
+    fun peek(): Screen? {
         return screenStack.lastOrNull()
     }
 }

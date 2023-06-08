@@ -7,7 +7,7 @@ import extensions.*
     Category별 상품 목록을 관리하고
     사용자가 요청한 Category의 상품목록을 표시하도록 구현
  */
-class ShoppingProductList: Screen() {
+class ShoppingProductList(private val selectedCategory: String): Screen() {
     private val products = arrayOf(
         Product("패션","겨울 패딩"),
         Product("패션","겨울 바지"),
@@ -22,7 +22,7 @@ class ShoppingProductList: Screen() {
     private val categories: Map<String, List<Product>> = products.groupBy { product ->
         product.categoryLabel
     }
-    fun showProducts(selectedCategory: String) {
+    fun showProducts() { // Ctrl + left
         ScreenStack.push(this)
         val categoryProducts = categories[selectedCategory]
         if (!categoryProducts.isNullOrEmpty()){
@@ -34,13 +34,13 @@ class ShoppingProductList: Screen() {
             categoryProducts.forEachIndexed { index, product ->
                 println("${index}. ${product.name}")
             }
-            showCartOption(categoryProducts, selectedCategory)
+            showCartOption(categoryProducts)
         } else {
             showEmptyProductMessage(selectedCategory)
         }
     }
 
-    private fun showCartOption(categoryProducts: List<Product>, selectedCategory: String ) { // 장바구니에 담을 상품을 선택
+    private fun showCartOption(categoryProducts: List<Product>) { // 장바구니에 담을 상품을 선택
         println(
             """
                 $LINE_DIVIDER
@@ -53,14 +53,17 @@ class ShoppingProductList: Screen() {
             CartItems.addProduct(product)
             println("=> 장바구니로 이동하시려면 #을, 계속 소핑하시려면 *을 입력해주세요.")
             val answer = readLine().getNotEmptyString()
-            if (answer == "#"){
+            if (answer == "#") {
                 val shoppingCart = ShoppingCart()
                 shoppingCart.showCartItems()
-            } else if ( answer == "*") {
-                showProducts(selectedCategory)
+            } else if (answer == "*") {
+                showProducts()
             } else {
                 // TODO 그 외 값 입력
             }
+        } ?: kotlin.run {
+            println("$selectedIndex 번은 목록에 없는 상품 번호입니다. 다시 입력해주세요.")
+            showProducts()
         }
     }
 
