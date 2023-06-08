@@ -1,6 +1,7 @@
 package screen
 
 import data.*
+import extensions.*
 /*
     Category별 상품 목록을 관리하고
     사용자가 요청한 Category의 상품목록을 표시하도록 구현
@@ -45,11 +46,11 @@ class ShoppingProductList {
             """.trimIndent()
         )
 
-        val selectedIndex = readLine()?.toIntOrNull()!! // 받은 문자열을 Int로 변환 | 변환 못할 시 Null로 반환 | non null assertion을 사용해 null이 아님을 컴파일에게 알림 ( 개선 필요)
+        val selectedIndex = readLine().getNotEmptyInt()
         categoryProducts.getOrNull(selectedIndex)?.let { product ->
             CartItems.addProduct(product)
             println("=> 장바구니로 이동하시려면 #을, 계속 소핑하시려면 *을 입력해주세요.")
-            val answer = readLine()
+            val answer = readLine().getNotEmptyString()
             if (answer == "#"){
                 val shoppingCart = ShoppingCart()
                 shoppingCart.showCartItems()
